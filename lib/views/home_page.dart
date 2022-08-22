@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sell_product/models/product.dart';
 import 'package:sell_product/services/remote_service.dart';
-import 'package:flutter/widgets.dart';
+import 'detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -55,28 +55,44 @@ class _HomePageState extends State<HomePage> {
                     elevation: 3,
                     child: TextButton(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Image.network(
-                            products![index].thumbnail,
-                            scale: 0.1,
-                          ),
-                          Text(
-                            products![index].title,
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            "\$${products![index].price}",
-                            style: const TextStyle(fontSize: 14),
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.left,
+                          Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height / 5,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      NetworkImage(products![index].thumbnail),
+                                ),
+                              )),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                products![index].title,
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                                overflow: TextOverflow.clip,
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "\$${products![index].price}",
+                                style: const TextStyle(fontSize: 14),
+                                overflow: TextOverflow.clip,
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      onPressed: () {},
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => DetailPage(
+                                    products![index],
+                                  ))),
                     )),
               );
             },
