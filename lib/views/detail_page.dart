@@ -22,9 +22,14 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+        child: CustomAppBar(
+          rating: widget.product.rating,
+        ),
+      ),
       body: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Column(children: [
           SizedBox(
             height: MediaQuery.of(context).size.height / 2.5,
             width: MediaQuery.of(context).size.width,
@@ -49,20 +54,117 @@ class _DetailPageState extends State<DetailPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: indicators(widget.product.images.length, activePage)),
           Container(
-            margin: const EdgeInsets.all(10),
-            child: Text(
-              widget.product.title,
-              style: const TextStyle(fontSize: 24),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: Text(
-              widget.product.description,
-              style: const TextStyle(fontSize: 14),
+            margin: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.product.title,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.w500),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    "\$${widget.product.price}",
+                    style:
+                        const TextStyle(fontSize: 20, color: Colors.deepPurple),
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      widget.product.rating.toString(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "|",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "Stok: ${widget.product.stock}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    widget.product.description,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Brand: ${widget.product.brand}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           ),
         ]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.shopping_cart_checkout),
+      ),
+    );
+  }
+}
+
+double getProportionateScreenWidth(BuildContext context, double inputWidth) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  // 375 is the layout width that designer use
+  return (inputWidth / 375.0) * screenWidth;
+}
+
+class CustomAppBar extends StatelessWidget {
+  const CustomAppBar({Key? key, this.rating}) : super(key: key);
+  final double? rating;
+  // AppBar().preferredSize.height provide us the height that appy on our app bar
+  Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(context, 20)),
+        child: Row(
+          children: [
+            SizedBox(
+              height: getProportionateScreenWidth(context, 40),
+              width: getProportionateScreenWidth(context, 40),
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    primary: Colors.black,
+                    backgroundColor: Colors.grey.shade50,
+                    padding: EdgeInsets.zero,
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Icon(Icons.arrow_back)),
+            ),
+          ],
+        ),
       ),
     );
   }
